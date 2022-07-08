@@ -1,0 +1,45 @@
+#click-photo{
+    display: block;
+    transform: translate(10px, -150%);
+    padding: .5em 1em;
+}
+
+#reset-and-calculate-buttons{
+    display: none;
+    transform: translate(10px, -150%);
+    padding: 1em 1.5em;
+    justify-content: space-between;
+}
+
+#reset-photo, #calculate{
+    padding: .5em 1em;
+}
+
+main{
+    width: 640px;
+    height: 480px;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+}
+
+div img{
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#canvas{
+    display: none;
+}
+
+#video{
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
+#video-and-image{
+    position: relative;
+}

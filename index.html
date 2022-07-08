@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html 
+    lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Find Pupil Distance</title>
+        <link rel="stylesheet" href="assets/css/style.css"/>
+        <script defer src="https://unpkg.com/@tensorflow/tfjs-core@2.4.0/dist/tf-core.js"></script>
+        <script defer src="https://unpkg.com/@tensorflow/tfjs-converter@2.4.0/dist/tf-converter.js"></script>
+        <script defer src="https://unpkg.com/@tensorflow/tfjs-backend-webgl@2.4.0/dist/tf-backend-webgl.js"></script>
+        <script defer src="https://unpkg.com/@tensorflow-models/face-landmarks-detection@0.0.1/dist/face-landmarks-detection.js"></script>
+        <script defer src="assets/js/index.js"></script>
+    </head>
+    <body>
+        <div class="main">
+            <div id="video-and-image">
+                <video id="video" width="640" height="480" autoplay></video>
+                <img src="assets/img/face.png" width="640" height="480" alt="">
+            </div>
+            <canvas id="canvas" width="640" height="480"></canvas>
+            <button id="click-photo">Click Photo</button>
+            <div id="reset-and-calculate-buttons">
+                <button  id="reset-photo">Reset Photo</button>
+                <button id="calculate">Calculate Pupil Distance</button>
+            </div>
+        </div>
+    </body>
+</html>
