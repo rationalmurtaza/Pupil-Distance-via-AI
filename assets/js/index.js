@@ -6,8 +6,9 @@ let reset_and_calculate_buttons_div = document.querySelector("#reset-and-calcula
 let calculate_distance = document.querySelector("#calculate");
 let video_image_div = document.querySelector("#video-and-image");
 let ctx = ''
-
-
+let loader = document.querySelector(".loader");
+let calculate = document.querySelector("#calculate");
+let pupil_distance_text = document.querySelector(".pupil-distance-text");
 video.addEventListener("playing", function () {
     setTimeout(function () {
         console.log("Stream dimensions" + video.videoWidth + "x" + video.videoHeight);
@@ -41,11 +42,15 @@ click_button.addEventListener('click', function () {
 reset_photo.addEventListener('click', function () {
     canvas.style.display = "none";
     video_image_div.style.display = "";
+    calculate.style.display = "";
     reset_and_calculate_buttons_div.style.display = "none";
     click_button.style.display = "block";
+    pupil_distance_text.innerHTML = "";
 });
 
 calculate_distance.addEventListener('click', function () {
+    loader.style.display = "flex";
+    calculate.style.display = "none";
     autoDraw();
 });
 
@@ -121,8 +126,9 @@ function displayIrisPosition(predictions) {
 
                 let irisWidth = (irisDiameter + irisDiameter2) / 2;
                 let pd = (11.7 / irisWidth) * pupilDistance;
-
+                loader.style.display = "none";
                 // alert("your Pupil Distance is approximately " + pd + "mm");
+                pupil_distance_text.innerHTML = "Your Pupil Distance is approximately " + pd.toFixed(2) + "mm";
             }
         });
     }
