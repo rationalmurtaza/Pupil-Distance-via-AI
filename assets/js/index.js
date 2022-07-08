@@ -7,6 +7,15 @@ let calculate_distance = document.querySelector("#calculate");
 let video_image_div = document.querySelector("#video-and-image");
 let ctx = ''
 
+
+video.addEventListener("playing", function () {
+    setTimeout(function () {
+        console.log("Stream dimensions" + video.videoWidth + "x" + video.videoHeight);
+        canvas.height = video.videoHeight;
+        canvas.width = video.videoWidth;
+    }, 500);
+});
+
 async function startCamera() {
     let stream = await navigator.mediaDevices.getUserMedia({
         video: true,
@@ -113,7 +122,7 @@ function displayIrisPosition(predictions) {
                 let irisWidth = (irisDiameter + irisDiameter2) / 2;
                 let pd = (11.7 / irisWidth) * pupilDistance;
 
-                alert("your Pupil Distance is approximately " + pd + "mm");
+                // alert("your Pupil Distance is approximately " + pd + "mm");
             }
         });
     }
