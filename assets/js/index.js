@@ -93,11 +93,14 @@ function displayIrisPosition(predictions) {
                     ctx.rect(x, y, 2, 2);
                     ctx.stroke();
                 }
+                let midX =  keyPoints[168][0];
+                let midY = ((keyPoints[473][1] + keyPoints[468][1])/2);
 
-                let x1 = keyPoints[468][0];
-                let x2 = keyPoints[473][0];
-                let y1 = keyPoints[468][1];
-                let y2 = keyPoints[473][1];
+                let leftEyeCenterX = keyPoints[468][0];
+                let leftEyeCenterY = keyPoints[468][1];
+
+                let rightEyeCenterX = keyPoints[473][0];
+                let rightEyeCenterY = keyPoints[473][1];
 
                 //iris left
                 let xLeft = keyPoints[474][0];
@@ -111,9 +114,26 @@ function displayIrisPosition(predictions) {
                 let xRight2 = keyPoints[469][0];
                 let yRight2 = keyPoints[469][1];
 
-                var newPoint = new Point(x1, y1);
-                var nextPoint = new Point(x2, y2);
-                let pupilDistance = newPoint.distanceTo(nextPoint);
+                var leftEyePoint = new Point(leftEyeCenterX, leftEyeCenterY);
+                var rightEyePoint = new Point(rightEyeCenterX, rightEyeCenterY);
+                let pupilDistance = leftEyePoint.distanceTo(rightEyePoint);
+                
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = "green";
+                ctx.beginPath();
+                ctx.moveTo(leftEyeCenterX, leftEyeCenterY);
+                ctx.lineTo(midX, midY);
+                ctx.stroke();
+
+                ctx.strokeStyle = "blue";
+                ctx.beginPath();
+                ctx.moveTo(rightEyeCenterX, rightEyeCenterY);
+                ctx.lineTo(midX, midY);
+                ctx.stroke();
+
+                let midPoint = new Point(midX, midY);
+                let leftEyePdInDistance = midPoint.distanceTo(leftEyePoint);
+                let rightEyePdInDistance = midPoint.distanceTo(rightEyePoint);
 
                 var left = new Point(xLeft, yLeft);
                 var right = new Point(xRight, yRight);
@@ -121,14 +141,19 @@ function displayIrisPosition(predictions) {
                 var left2 = new Point(xLeft2, yLeft2);
                 var right2 = new Point(xRight2, yRight2);
 
-                let irisDiameter = left.distanceTo(right);
-                let irisDiameter2 = left2.distanceTo(right2);
+                let irisDiameterLeft = left.distanceTo(right);
+                let irisDiameterRight = left2.distanceTo(right2);
 
-                let irisWidth = (irisDiameter + irisDiameter2) / 2;
+                
+                let irisWidth = (irisDiameterLeft + irisDiameterRight) / 2;
+
+                let LeftEyePD = (11.7 / irisWidth) * leftEyePdInDistance;
+                let RightEyePD = (11.7 / irisWidth) * rightEyePdInDistance;
                 let pd = (11.7 / irisWidth) * pupilDistance;
                 loader.style.display = "none";
-                // alert("your Pupil Distance is approximately " + pd + "mm");
-                pupil_distance_text.innerHTML = "Your Pupil Distance is approximately " + pd.toFixed(2) + "mm";
+                pupil_distance_text.innerHTML = "<h2>Your Pupil Distance is approximately " + pd.toFixed(2) + "mm</h2>"
+                                                + "<h3>Your Left Eye Monocular PD is approximately " + LeftEyePD.toFixed(2) + "mm</h3>"
+                                                + "<h3>Your Right Eye Monocular PD is approximately " + RightEyePD.toFixed(2) + "mm</h3>";
             }
         });
     }
