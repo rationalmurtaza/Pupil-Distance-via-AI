@@ -15,7 +15,25 @@
     </head>
     <body>
         <div class="pupil-distance-text"></div>
-        <main>
+        <div id="buttonForCameraAndImage">
+            <button id="camera-on-button">use Camera</button>
+            <button id="choose-image-button">use Image</button>
+        </div>
+        <main style="display: none;" id="main-div-for-Image">
+            <div style="margin-bottom: 1em;">
+                <input type="file" name="image" id="image-for-eye-pupils">
+            </div>
+            <div>
+                <div style="display: none;" class="loader-image">
+                    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                </div>
+                <canvas width="640" height="480" id="canvasForImage"></canvas>
+            </div>
+            <div id="calculate-buttons-image" style="transform: translateY(-150%);">
+                <button id="calculate-image-pd">Calculate Pupil Distance</button>
+            </div>
+        </main>
+        <main style="display: none;" id="main-div-for-video">
             <div class="main">
                 <div style="display: none;" class="loader">
                     <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
