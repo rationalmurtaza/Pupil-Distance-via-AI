@@ -55,7 +55,6 @@ imageForEyePupils.addEventListener('change', (e) => {
 
 video.addEventListener("playing", function () {
     setTimeout(function () {
-        console.log("Stream dimensions" + video.videoWidth + "x" + video.videoHeight);
         canvas.height = video.videoHeight;
         canvas.width = video.videoWidth;
     }, 500);
@@ -114,7 +113,6 @@ async function autoDraw(canvas, workingCanvas) {
 
     model = await loadFaceLandmarkDetectionModel();
     //Render Face Mesh Prediction
-    console.log(model);
     renderPrediction(canvas, workingCanvas);
 
 }
@@ -131,7 +129,6 @@ async function renderPrediction(ctx, workingCanvas) {
     const predictions = await model.estimateFaces({
         input: ctx.getImageData(0, 0, workingCanvas.width, workingCanvas.height),
     });
-    console.log(predictions);
     displayIrisPosition(predictions, ctx,);
 }
 
