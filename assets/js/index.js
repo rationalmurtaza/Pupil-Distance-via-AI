@@ -37,6 +37,7 @@ chooseImageButton.addEventListener("click", () => {
 })
 
 imageForEyePupils.addEventListener('change', (e) => {
+    pupil_distance_text.innerHTML = "";
     let image = e.target.files[0];
     ctxImage.clearRect(0, 0, canvasForImage.width, canvasForImage.height);
     var img = new Image;
@@ -129,7 +130,14 @@ async function renderPrediction(ctx, workingCanvas) {
     const predictions = await model.estimateFaces({
         input: ctx.getImageData(0, 0, workingCanvas.width, workingCanvas.height),
     });
-    displayIrisPosition(predictions, ctx,);
+    if(predictions.length){
+        displayIrisPosition(predictions, ctx)
+    }else{
+        pupil_distance_text.innerHTML = "<h2>No Face Detected</h2>";
+        loader.style.display = "none";
+        loaderImage.style.display = "none";
+
+    }
 }
 
 function displayIrisPosition(predictions, ctx) {
