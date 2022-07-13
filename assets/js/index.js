@@ -71,6 +71,7 @@ async function startCamera() {
 
 calculateImagePd.addEventListener("click", () => {
     loaderImage.style.display = "flex";
+    calculateImagePd.style.display = "none";
     autoDraw(ctxImage, canvasForImage);
 })
 
