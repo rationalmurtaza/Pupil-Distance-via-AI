@@ -19,6 +19,9 @@ let loaderImage = document.querySelector(".loader-image");
 
 let canvasForImage = document.querySelector("#canvasForImage");
 let calculateImagePd = document.querySelector("#calculate-image-pd");
+let lightning_and_face_div = document.querySelector("#main-div-for-video .face-and-lightning");
+let lightning = document.querySelector("#main-div-for-video .face-and-lightning .lightning");
+let faceDiv = document.querySelector("#main-div-for-video .face-and-lightning .face");
 
 cameraOnButton.addEventListener("click", () => {
     resetPhotoFunction();
@@ -54,12 +57,90 @@ imageForEyePupils.addEventListener('change', (e) => {
     calculateImagePd.style.display = "";
 })
 
+let imageData
+let loopForVideoFunction = async () => {
+    click_button.style.display = "none";
+    let model = await loadFaceLandmarkDetectionModel();
+    (async function loop() {
+        if (video_image_div.style.display != "none") {
+
+            lightning_and_face_div.style.display = "flex";
+            
+            let result = isItDark()
+            const faces = await model.estimateFaces({
+                input: imageData,
+            });
+
+            if (faces.length) {
+                faceDiv.style.color = "green"
+                faceDiv.children[1].innerHTML = "✓";
+            }else{
+                faceDiv.style.color = "red";
+                faceDiv.children[1].innerHTML = "✕";
+            }
+
+            if (!result) {
+                lightning.style.color = "green";
+                lightning.children[1].innerHTML = "✓";
+            }else{
+                lightning.style.color = "red";
+                lightning.children[1].innerHTML = "✕";
+            }
+            if(faces.length && !result) {
+                click_button.style.display = "";
+            }else{
+                click_button.style.display = "none";
+            }
+
+            setTimeout(loop, 1000 / 30); // drawing at 30fps
+        }else{
+            click_button.style.display = "none";
+            lightning_and_face_div.style.display = "none";
+        }
+    })();
+}
+
 video.addEventListener("playing", function () {
     setTimeout(function () {
         canvas.height = video.videoHeight;
         canvas.width = video.videoWidth;
     }, 500);
+    loopForVideoFunction();
 });
+
+function isItDark() {
+    let fuzzy = 0.1;
+    let canvas = document.createElement("canvas");
+    canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth;
+
+    let ctx = canvas.getContext("2d");
+    ctx.drawImage(video,0,0);
+
+    imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+    let data = imageData.data;
+    let r,g,b, max_rgb;
+    let light = 0, dark = 0;
+
+    for(let x = 0, len = data.length; x < len; x+=4) {
+        r = data[x];
+        g = data[x+1];
+        b = data[x+2];
+
+        max_rgb = Math.max(Math.max(r, g), b);
+        if (max_rgb < 128)
+            dark++;
+        else
+            light++;
+    }
+
+    let dl_diff = ((light - dark) / (video.videoWidth*video.videoHeight));
+
+    if (dl_diff + fuzzy < 0)
+        return true; /* Dark. */
+    else
+        return false;  /* Not dark. */
+}
 
 async function startCamera() {
     let stream = await navigator.mediaDevices.getUserMedia({
@@ -91,6 +172,7 @@ click_button.addEventListener('click', function () {
 
 reset_photo.addEventListener('click', function () {
     resetPhotoFunction();
+    loopForVideoFunction();
 })
 
 let resetPhotoFunction = () => {
@@ -121,7 +203,8 @@ async function autoDraw(canvas, workingCanvas) {
 async function loadFaceLandmarkDetectionModel() {
     return faceLandmarksDetection.load(
         faceLandmarksDetection.SupportedPackages.mediapipeFacemesh, {
-            maxFaces: 1
+            maxFaces: 1,
+            staticImageMode: false,
         }
     );
 }
