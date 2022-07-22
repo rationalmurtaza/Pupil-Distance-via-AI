@@ -177,7 +177,7 @@ div img {
     margin: 0em .5em 0em .5em;
 }
 
-.loader, .loader-image{
+.loader, .loader-image {
     position: fixed;
     width: 100%;
     max-width: 640px;
@@ -188,11 +188,12 @@ div img {
     align-items: center;
 }
 
-.pupil-distance-text{
+.pupil-distance-text {
     text-align: center;
     color: #1485d7;
 }
-button{
+
+button {
     padding: 0.3em 0.5em;
     border-radius: 0.5em;
     background-color: #427aa1;
@@ -202,7 +203,7 @@ button{
     cursor: pointer;
     margin: .2em .5em;
 }
-button:hover{
+button:hover {
     filter: opacity(0.8);
     transition: all 0.2s ease-in-out;
 }
