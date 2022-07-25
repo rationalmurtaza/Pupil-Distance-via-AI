@@ -149,22 +149,29 @@ function isItDark() {
     let centerPointX =  canvas.width / 2;
     let centerPointY =  canvas.height / 2;
     
+    const PERCENTAGE_OF_OVAL_START = 1.53;
+    const PERCENTAGE_OF_OVAL_END = .57;
     /*
      * finding the length of the line from the start of the oval to the end of the oval
     **/
-    let containerStartXPoint = centerPointX - (ovalFaceImage.width / 2);
-    let containerStartYPoint = centerPointY - (ovalFaceImage.height / 2);
+    let containerStartXPoint = (centerPointX - (ovalFaceImage.width / 2)) * PERCENTAGE_OF_OVAL_START;
+
+    let containerStartYPoint = (centerPointY - (ovalFaceImage.height / 2)) * PERCENTAGE_OF_OVAL_START;
     let containerStartPoints = new Point(containerStartXPoint, containerStartYPoint)
 
-    let containerEndXPoint = centerPointX + (ovalFaceImage.width / 2);
-    let containerEndYPoint = centerPointY + (ovalFaceImage.height / 2);
+    let containerEndXPoint = (centerPointX + (ovalFaceImage.width / 2))  * PERCENTAGE_OF_OVAL_END;
+    let containerEndYPoint = (centerPointY + (ovalFaceImage.height / 2))  * PERCENTAGE_OF_OVAL_END;
     let containerEndPoints = new Point(containerEndXPoint, containerEndYPoint)
 
     diagonalSize = containerStartPoints.distanceTo(containerEndPoints);
 
-    imageData = ctx.getImageData(containerStartXPoint , containerStartYPoint, ovalFaceImage.width , ovalFaceImage.height);
+    imageData = ctx.getImageData(containerStartXPoint, containerStartYPoint,
+                                    ovalFaceImage.width * PERCENTAGE_OF_OVAL_END, 
+                                    ovalFaceImage.height * PERCENTAGE_OF_OVAL_END);
 
-    let data = imageData.data;
+    let imageDataForLight = ctx.getImageData(0 , 0, canvas.width, canvas.height);
+
+    let data = imageDataForLight.data;
     let r,g,b, max_rgb;
     let light = 0, dark = 0;
 
