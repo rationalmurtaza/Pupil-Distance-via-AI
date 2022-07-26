@@ -149,25 +149,27 @@ function isItDark() {
     let centerPointX =  canvas.width / 2;
     let centerPointY =  canvas.height / 2;
     
-    const PERCENTAGE_OF_OVAL_START = 1.53;
-    const PERCENTAGE_OF_OVAL_END = .57;
+    const PERCENTAGE_OF_OVAL_START_X = 1.53;
+    const PERCENTAGE_OF_OVAL_START_Y = 1.35;
+    const PERCENTAGE_OF_OVAL_END_X = .57;
+    const PERCENTAGE_OF_OVAL_END_Y = .65;
     /*
      * finding the length of the line from the start of the oval to the end of the oval
     **/
-    let containerStartXPoint = (centerPointX - (ovalFaceImage.width / 2)) * PERCENTAGE_OF_OVAL_START;
+    let containerStartXPoint = (centerPointX - (ovalFaceImage.width / 2)) * PERCENTAGE_OF_OVAL_START_X;
 
-    let containerStartYPoint = (centerPointY - (ovalFaceImage.height / 2)) * PERCENTAGE_OF_OVAL_START;
+    let containerStartYPoint = (centerPointY - (ovalFaceImage.height / 2)) * PERCENTAGE_OF_OVAL_START_Y;
     let containerStartPoints = new Point(containerStartXPoint, containerStartYPoint)
 
-    let containerEndXPoint = (centerPointX + (ovalFaceImage.width / 2))  * PERCENTAGE_OF_OVAL_END;
-    let containerEndYPoint = (centerPointY + (ovalFaceImage.height / 2))  * PERCENTAGE_OF_OVAL_END;
+    let containerEndXPoint = (centerPointX + (ovalFaceImage.width / 2))  * PERCENTAGE_OF_OVAL_END_X;
+    let containerEndYPoint = (centerPointY + (ovalFaceImage.height / 2))  * PERCENTAGE_OF_OVAL_END_Y;
     let containerEndPoints = new Point(containerEndXPoint, containerEndYPoint)
 
     diagonalSize = containerStartPoints.distanceTo(containerEndPoints);
 
     imageData = ctx.getImageData(containerStartXPoint, containerStartYPoint,
-                                    ovalFaceImage.width * PERCENTAGE_OF_OVAL_END, 
-                                    ovalFaceImage.height * PERCENTAGE_OF_OVAL_END);
+                                    ovalFaceImage.width * PERCENTAGE_OF_OVAL_END_X, 
+                                    ovalFaceImage.height * PERCENTAGE_OF_OVAL_END_Y);
 
     let imageDataForLight = ctx.getImageData(0 , 0, canvas.width, canvas.height);
 
