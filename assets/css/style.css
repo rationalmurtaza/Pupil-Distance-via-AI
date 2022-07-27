@@ -177,7 +177,13 @@ div img {
     margin: 0em .5em 0em .5em;
 }
 
-.loader, .loader-image {
+#counter-text-for-video {
+    font-size: 2.5em;
+    color: #1485d7;
+    backdrop-filter: brightness(0.8);
+}
+
+.loader, .loader-image, .counter {
     position: fixed;
     width: 100%;
     max-width: 640px;
