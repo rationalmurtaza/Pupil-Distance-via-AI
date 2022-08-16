@@ -72,6 +72,7 @@ let loopForVideoFunction = async () => {
     let captureFlag = false;
     let setIntervalFlag = false;
     let count = 5;
+    let interval;
     (async function loop() {
         if (video_image_div.style.display != "none") {
             lightning_and_face_div.style.display = "flex";
@@ -125,35 +126,45 @@ let loopForVideoFunction = async () => {
                 counterDiv.style.display = "flex";
             }else{
                 // click_button.style.display = "none";
+                if(interval){
+                    clearInterval(interval);
+                    interval = undefined;
+                }
                 captureFlag = false;
                 count = 5;
                 setIntervalFlag = false;
                 counterDiv.style.display = "none";
             }
-
-            if(captureFlag && !setIntervalFlag && count == 5 && count > 0) {
+            if(!interval && captureFlag && !setIntervalFlag && count == 5) {
                 setIntervalFlag = true;
-                let interval = setInterval(() => {
-                                    if(!captureFlag) {
-                                        clearInterval(interval);
-                                        setIntervalFlag = false;
-                                    } else if(count == 0 && captureFlag) {
-                                        clearInterval(interval);
-                                        counterDiv.style.display = "none";
-                                        clickPhoto();
-                                    } else if(count <= 3) counterDiv.children[0].children[0].innerHTML = `<b>${count}</b>`;
+                interval = setInterval(() => {
+                                if(!captureFlag) {
+                                    clearInterval(interval);
+                                    interval = undefined;
+                                    setIntervalFlag = false;
+                                } else if(count == 0 && captureFlag) {
+                                    clearInterval(interval);
+                                    interval = undefined;
+                                    counterDiv.style.display = "none";
+                                    clickPhoto();
+                                } else if(count <= 3) counterDiv.children[0].children[0].innerHTML = `<b>${count}</b>`;
 
-                                    if(count <= 0) clearInterval(interval);
+                                if(count <= 0){
+                                    clearInterval(interval);
+                                    interval = undefined;
+                                }
 
-                                    if(count > 0) count--;
+                                if(count > 0) count--;
 
-                                }, 1000);
-}
+                            }, 1000);
+            }
             setTimeout(loop, 1000 / 30); // drawing at 30fps
         }else{
             click_button.style.display = "none";
             lightning_and_face_div.style.display = "none";
             counterDiv.style.display = "none";
+            clearInterval(interval);
+            interval = undefined;
         }
     })();
 }
