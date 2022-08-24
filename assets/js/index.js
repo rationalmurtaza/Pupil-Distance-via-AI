@@ -585,12 +585,15 @@ function displayIrisPosition (predictions, ctx) {
         const pd = (11.7 / irisWidth) * pupilDistance
         loader.style.display = 'none'
         loaderImage.style.display = 'none'
+        const leftRoundedPD = roundToNearest50(LeftEyePD * 100) / 100
+        const rightRoundedPD = roundToNearest50(RightEyePD * 100) / 100
+
         pupilDistanceText.innerHTML = '<h2>Your Pupil Distance is approximately ' +
-                                      roundToNearest50(pd * 100) / 100 + 'mm</h2>' +
+                                      leftRoundedPD + rightRoundedPD + 'mm</h2>' +
                                       '<h3>Your Left Eye Monocular PD is approximately ' +
-                                      roundToNearest50(LeftEyePD * 100) / 100 + 'mm</h3>' +
+                                      leftRoundedPD + 'mm</h3>' +
                                       '<h3>Your Right Eye Monocular PD is approximately ' +
-                                      roundToNearest50(RightEyePD * 100) / 100 + 'mm</h3>'
+                                      rightRoundedPD + 'mm</h3>'
       }
     })
   }
