@@ -1,0 +1,1 @@
+export default const EYE_PERCENTAGE_VALUE = 2

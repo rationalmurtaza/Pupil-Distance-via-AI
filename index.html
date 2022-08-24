@@ -7,6 +7,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Find Pupil Distance</title>
         <link rel="stylesheet" href="assets/css/style.css"/>
+        <script>
+            if(!window.navigator.onLine){
+                alert('internet is not connected');
+            }
+        </script>
         <script defer src="https://unpkg.com/@tensorflow/tfjs-core@2.4.0/dist/tf-core.js"></script>
         <script defer src="https://unpkg.com/@tensorflow/tfjs-converter@2.4.0/dist/tf-converter.js"></script>
         <script defer src="https://unpkg.com/@tensorflow/tfjs-backend-webgl@2.4.0/dist/tf-backend-webgl.js"></script>
@@ -57,6 +62,7 @@
                     <div class="lightning"><h3>Lightning</h3><span>✕</span></div>
                     <div class="face"><h3>Face</h3><span>✕</span></div>
                     <div class="face-size"><h3>Face is Closer</h3><span>✕</span></div>
+                    <div class="face-straight"><h3>Look Straight</h3><span>✕</span></div>
                 </div>
             </div>
         </main>
