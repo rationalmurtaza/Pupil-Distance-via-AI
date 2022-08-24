@@ -51,6 +51,7 @@ chooseImageButton.addEventListener('click', () => {
   calculateImagePd.style.display = 'none'
   pupilDistanceText.innerHTML = ''
   videoImageDiv.style.display = 'none'
+  stopBothVideo()
 })
 
 imageForEyePupils.addEventListener('change', (e) => {
@@ -153,7 +154,7 @@ const loopForVideoFunction = async () => {
         // console.log('🎮🌴 ~ loop ~ leftToMidDistance', leftToMidDistance)
         const rightToMidDistance = rightEyeMidPoints.distanceTo(midPoints)
         // console.log('🎮🌴 ~ loop ~ rightToMidDistance', rightToMidDistance)
-        const completeDistance = leftEyeMidPoints.distanceTo(rightEyeMidPoints)
+        // const completeDistance = leftEyeMidPoints.distanceTo(rightEyeMidPoints)
         // console.log('🎮🌴 ~ loop ~ completeDistance', completeDistance)
 
         const LOWER_PERCENTAGE = 0.92
@@ -353,9 +354,9 @@ function isItDark () {
     return false /* Not dark. */
   }
 }
-
+let stream
 async function startCamera () {
-  const stream = await navigator.mediaDevices.getUserMedia({
+  stream = await navigator.mediaDevices.getUserMedia({
     video: true,
     audio: false
   })
@@ -430,6 +431,7 @@ resetPhoto.addEventListener('click', function () {
  * It resets the page to its original state.
  */
 const resetPhotoFunction = () => {
+  startCamera()
   canvas.style.display = 'none'
   videoImageDiv.style.display = ''
   calculate.style.display = ''
@@ -588,6 +590,8 @@ function displayIrisPosition (predictions, ctx) {
         const leftRoundedPD = roundToNearest50(LeftEyePD * 100) / 100
         const rightRoundedPD = roundToNearest50(RightEyePD * 100) / 100
 
+        stopBothVideo()
+
         pupilDistanceText.innerHTML = '<h2>Your Pupil Distance is approximately ' +
                                       (leftRoundedPD + rightRoundedPD) + 'mm</h2>' +
                                       '<h3>Your Left Eye Monocular PD is approximately ' +
@@ -597,6 +601,19 @@ function displayIrisPosition (predictions, ctx) {
       }
     })
   }
+}
+
+function stopBothVideo () {
+  console.log(stream)
+  if (stream) {
+    stream.getTracks().forEach(function (track) {
+      if (track.readyState === 'live') {
+        track.stop()
+        console.log('stop')
+      }
+    })
+  }
+  if (video.srcObject) video.srcObject = undefined
 }
 
 /**
