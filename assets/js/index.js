@@ -132,7 +132,7 @@ const loopForVideoFunction = async () => {
         //   top: faces[0].scaledMesh[168],
         //   bottom: faces[0].scaledMesh[6]
         // }
-        // console.log('midwayBetweenEyes: ', faces[0].annotations.midwayBetweenEyes, midwayBetweenEyes)
+        // console.log('midwayBetweenEyes: ', faces[0])
 
         const rightEyeIris = {
           left: faces[0].scaledMesh[476],
@@ -150,14 +150,14 @@ const loopForVideoFunction = async () => {
           (leftEyeIris.center[1] + rightEyeIris.center[1]) / 2)
         console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         const leftToMidDistance = leftEyeMidPoints.distanceTo(midPoints)
-        console.log('🎮🌴 ~ loop ~ leftToMidDistance', leftToMidDistance)
+        // console.log('🎮🌴 ~ loop ~ leftToMidDistance', leftToMidDistance)
         const rightToMidDistance = rightEyeMidPoints.distanceTo(midPoints)
-        console.log('🎮🌴 ~ loop ~ rightToMidDistance', rightToMidDistance)
+        // console.log('🎮🌴 ~ loop ~ rightToMidDistance', rightToMidDistance)
         const completeDistance = leftEyeMidPoints.distanceTo(rightEyeMidPoints)
-        console.log('🎮🌴 ~ loop ~ completeDistance', completeDistance)
+        // console.log('🎮🌴 ~ loop ~ completeDistance', completeDistance)
 
-        const LOWER_PERCENTAGE = 0.95
-        const HIGHER_PERCENTAGE = 1.05
+        const LOWER_PERCENTAGE = 0.92
+        const HIGHER_PERCENTAGE = 1.08
         if (leftToMidDistance > rightToMidDistance * LOWER_PERCENTAGE &&
           leftToMidDistance < rightToMidDistance * HIGHER_PERCENTAGE) {
           console.log('Straight')
