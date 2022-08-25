@@ -1,3 +1,13 @@
+import {
+  AUDIO_ON_OFF,
+  LOWER_PERCENTAGE_FOR_EYE,
+  HIGHER_PERCENTAGE_FOR_EYE,
+  AUDIO_BE_STILL_PATH,
+  AUDIO_COME_CLOSER_PATH,
+  AUDIO_ENSURE_PROPER_LIGHTING_PATH,
+  AUDIO_LOOK_STRAIGHT_PATH,
+  AUDIO_NO_FACE_DETECTED_PATH
+} from '/env.js'
 /* eslint-disable no-undef */
 const video = document.querySelector('#video')
 const clickButton = document.querySelector('#click-photo')
@@ -29,16 +39,11 @@ const faceLookStraight = document.querySelector('#main-div-for-video .face-and-l
 const ovalFaceImage = document.querySelector('#oval-face-image')
 
 const counterDiv = document.querySelector('.counter')
-/**
- * if false audio is not played
- */
-const AUDIO_ON_OFF = false
 
 cameraOnButton.addEventListener('click', () => {
   resetPhotoFunction()
   mainDivForImage.style.display = 'none'
   mainDivForVideo.style.display = ''
-  startCamera()
   loader.style.display = 'flex'
   calculate.style.display = 'none'
 })
@@ -51,7 +56,7 @@ chooseImageButton.addEventListener('click', () => {
   calculateImagePd.style.display = 'none'
   pupilDistanceText.innerHTML = ''
   videoImageDiv.style.display = 'none'
-  stopBothVideo()
+  stopVideo()
 })
 
 imageForEyePupils.addEventListener('change', (e) => {
@@ -99,11 +104,11 @@ const loopForVideoFunction = async () => {
     }
   }
 
-  const audioBeStill = new Audio('assets/audio/be-still.mp3')
-  const audioComeCloser = new Audio('assets/audio/come-closer.mp3')
-  const audioEnsureProperLighting = new Audio('assets/audio/ensure-proper-lighting.mp3')
-  const audioLookStraight = new Audio('assets/audio/look-straight.mp3')
-  const audioNoFaceDetected = new Audio('assets/audio/no-face-detected.mp3');
+  const audioBeStill = new Audio(AUDIO_BE_STILL_PATH)
+  const audioComeCloser = new Audio(AUDIO_COME_CLOSER_PATH)
+  const audioEnsureProperLighting = new Audio(AUDIO_ENSURE_PROPER_LIGHTING_PATH)
+  const audioLookStraight = new Audio(AUDIO_LOOK_STRAIGHT_PATH)
+  const audioNoFaceDetected = new Audio(AUDIO_NO_FACE_DETECTED_PATH);
 
   (async function loop () {
     if (videoImageDiv.style.display !== 'none') {
@@ -119,7 +124,6 @@ const loopForVideoFunction = async () => {
         faceDiv.style.color = 'green'
         faceDiv.children[1].innerHTML = '✓'
 
-        /** logging for face points */
         const leftEyeIris = {
           left: faces[0].scaledMesh[471],
           bottom: faces[0].scaledMesh[472],
@@ -127,13 +131,6 @@ const loopForVideoFunction = async () => {
           right: faces[0].scaledMesh[469],
           top: faces[0].scaledMesh[470]
         }
-        // console.log('leftEyeIris: ', faces[0].annotations.leftEyeIris, leftEyeIris)
-
-        // const midwayBetweenEyes = {
-        //   top: faces[0].scaledMesh[168],
-        //   bottom: faces[0].scaledMesh[6]
-        // }
-        // console.log('midwayBetweenEyes: ', faces[0])
 
         const rightEyeIris = {
           left: faces[0].scaledMesh[476],
@@ -142,35 +139,26 @@ const loopForVideoFunction = async () => {
           right: faces[0].scaledMesh[474],
           top: faces[0].scaledMesh[475]
         }
-        // console.log('rightEyeIris: ', faces[0].annotations.rightEyeIris, rightEyeIris)
 
         const leftEyeMidPoints = new Point(leftEyeIris.center[0], leftEyeIris.center[1])
         const rightEyeMidPoints = new Point(rightEyeIris.center[0], rightEyeIris.center[1])
-        // const midPoints = new Point(faces[0].annotations.midwayBetweenEyes[0][0], faces[0].annotations.midwayBetweenEyes[0][1])
         const midPoints = new Point((faces[0].scaledMesh[193][0] + faces[0].scaledMesh[417][0]) / 2,
           (leftEyeIris.center[1] + rightEyeIris.center[1]) / 2)
-        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         const leftToMidDistance = leftEyeMidPoints.distanceTo(midPoints)
-        // console.log('🎮🌴 ~ loop ~ leftToMidDistance', leftToMidDistance)
         const rightToMidDistance = rightEyeMidPoints.distanceTo(midPoints)
-        // console.log('🎮🌴 ~ loop ~ rightToMidDistance', rightToMidDistance)
-        // const completeDistance = leftEyeMidPoints.distanceTo(rightEyeMidPoints)
-        // console.log('🎮🌴 ~ loop ~ completeDistance', completeDistance)
 
-        const LOWER_PERCENTAGE = 0.92
-        const HIGHER_PERCENTAGE = 1.08
-        if (leftToMidDistance > rightToMidDistance * LOWER_PERCENTAGE &&
-          leftToMidDistance < rightToMidDistance * HIGHER_PERCENTAGE) {
-          console.log('Straight')
+        if (leftToMidDistance > rightToMidDistance * LOWER_PERCENTAGE_FOR_EYE &&
+          leftToMidDistance < rightToMidDistance * HIGHER_PERCENTAGE_FOR_EYE) {
           eyeStraightFlag = true
           faceLookStraight.style.color = 'green'
           faceLookStraight.children[1].innerHTML = '✓'
         } else {
+          if (checkAudioIsPlaying()) {
+            audioLookStraight.play()
+          }
           faceLookStraight.style.color = 'red'
           faceLookStraight.children[1].innerHTML = '✕'
         }
-        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        /** logging for face points */
 
         const faceLeftX = faces[0].boundingBox.topLeft[0]
         const faceLeftY = faces[0].boundingBox.topLeft[1]
@@ -221,7 +209,7 @@ const loopForVideoFunction = async () => {
         if (count === 5) {
           counterDiv.children[0].children[0].innerHTML = 'hold on, Capturing Image...'
           if (checkAudioIsPlaying()) {
-            audioLookStraight.play()
+            audioBeStill.play()
           }
         }
         counterDiv.style.display = 'flex'
@@ -376,7 +364,7 @@ clickButton.addEventListener('click', function () {
 /**
  * It takes a photo of the user, hides the video, shows the canvas, and calls the autoDraw function
  */
-async function clickPhoto () {
+function clickPhoto () {
   videoImageDiv.style.display = 'none'
   canvas.style.display = 'block'
   resetAndCalculateButtonsDiv.style.display = 'flex'
@@ -389,35 +377,6 @@ async function clickPhoto () {
   ctx.drawImage(video, canvas.width * -1, 0, canvas.width, canvas.height)
   ctx.restore()
   callAutoDraw()
-  /*
-  * Rotation according to the angle of the face
-  */
-  // const imageData = ctx.getImageData(0 , 0, canvas.width, canvas.height)
-  // const faces = await model.estimateFaces({
-  //   input: imageData
-  // })
-
-  // find angle between pupillary line and X-axis
-  // const deltaX = faces[0].mesh[474][0] - faces[0].mesh[471][0]
-  // const deltaY = faces[0].mesh[474][1] - faces[0].mesh[471][1]
-
-  // Slope of line formula
-  // let angle = Math.atan(deltaY / deltaX)
-
-  // Converting radians to degrees
-  // angle = (angle * 180) / Math.PI
-
-  // console.log(faces[0].mesh[6])
-  // console.log(faces[0].mesh[168])
-  // ctx.translate(0, 0)
-  // const yDelta = faces[0].mesh[168][1] - faces[0].mesh[6][1]
-  // const xDelta = faces[0].mesh[168][0] - faces[0].mesh[6][0]
-  // const angle = Math.atan2(yDelta, xDelta)
-
-  // ctx.rotate(angle)
-  // ctx.drawImage(video, canvas.width * -1, 0, canvas.width, canvas.height)
-  // console.log(angle)
-  // ctx.restore()
 }
 
 /* The above code is adding an event listener to the resetPhoto button. When the button is clicked, the
@@ -430,8 +389,8 @@ resetPhoto.addEventListener('click', function () {
 /**
  * It resets the page to its original state.
  */
-const resetPhotoFunction = () => {
-  startCamera()
+const resetPhotoFunction = async () => {
+  await startCamera()
   canvas.style.display = 'none'
   videoImageDiv.style.display = ''
   calculate.style.display = ''
@@ -526,19 +485,12 @@ function displayIrisPosition (predictions, ctx) {
         const distanceFrom2PointsAndMidPointRight = rightEyePoint.distanceTo(new Point(midXOf2PointsAndMidPoint, midY))
 
         const absDiff2Points = Math.abs(distanceFrom2PointsLeft - distanceFrom2PointsRight)
-        console.log('🎮🌴 ~ predictions.forEach ~ absDiff2Points', absDiff2Points)
         const absDiffMidPoint = Math.abs(distanceFromMidPointLeft - distanceFromMidPointRight)
-        console.log('🎮🌴 ~ predictions.forEach ~ absDiffMidPoint', absDiffMidPoint)
         const absDiff2PointsAndMidPoint = Math.abs(distanceFrom2PointsAndMidPointLeft - distanceFrom2PointsAndMidPointRight)
-        console.log('🎮🌴 ~ predictions.forEach ~ absDiff2PointsAndMidPoint', absDiff2PointsAndMidPoint)
 
         const midX = (absDiff2Points < absDiffMidPoint && absDiff2Points < absDiff2PointsAndMidPoint)
           ? midXFrom2Points
           : (absDiffMidPoint < absDiff2PointsAndMidPoint) ? midXMidPointWithEyeMidPoint : midXOf2PointsAndMidPoint
-
-        const pupilDistance = leftEyePoint.distanceTo(rightEyePoint)
-
-        console.log('🎮🌴 ~ predictions.forEach ~ pupilDistance', pupilDistance)
 
         ctx.lineWidth = 3
         ctx.strokeStyle = 'green'
@@ -555,9 +507,7 @@ function displayIrisPosition (predictions, ctx) {
 
         const midPoint = new Point(midX, midY)
         const leftEyePdInDistance = midPoint.distanceTo(leftEyePoint)
-        console.log('🎮🌴 ~ predictions.forEach ~ leftEyePdInDistance', leftEyePdInDistance)
         const rightEyePdInDistance = midPoint.distanceTo(rightEyePoint)
-        console.log('🎮🌴 ~ predictions.forEach ~ rightEyePdInDistance', rightEyePdInDistance)
 
         // iris left
         const xLeft = keyPoints[474][0]
@@ -590,7 +540,7 @@ function displayIrisPosition (predictions, ctx) {
         const leftRoundedPD = roundToNearest50(LeftEyePD * 100) / 100
         const rightRoundedPD = roundToNearest50(RightEyePD * 100) / 100
 
-        stopBothVideo()
+        stopVideo()
 
         pupilDistanceText.innerHTML = '<h2>Your Pupil Distance is approximately ' +
                                       (leftRoundedPD + rightRoundedPD) + 'mm</h2>' +
@@ -603,13 +553,11 @@ function displayIrisPosition (predictions, ctx) {
   }
 }
 
-function stopBothVideo () {
-  console.log(stream)
+function stopVideo () {
   if (stream) {
     stream.getTracks().forEach(function (track) {
       if (track.readyState === 'live') {
         track.stop()
-        console.log('stop')
       }
     })
   }
