@@ -7,7 +7,7 @@ import {
   AUDIO_ENSURE_PROPER_LIGHTING_PATH,
   AUDIO_LOOK_STRAIGHT_PATH,
   AUDIO_NO_FACE_DETECTED_PATH
-} from 'env.js'
+} from '/Pupil-Distance-via-AI/env.js'
 /* eslint-disable no-undef */
 const video = document.querySelector('#video')
 const clickButton = document.querySelector('#click-photo')
